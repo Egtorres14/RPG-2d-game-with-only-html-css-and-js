@@ -1,0 +1,445 @@
+        /* Variables de Colores y Fuentes */
+        :root {
+            --color-primario: #fff;
+            --color-secundario: rgba(255, 255, 255, 0.3);
+            --fondo-superior: rgba(0, 0, 0, 0.7);
+            --fondo-boton: #333;
+            --fondo-boton-hover: #555;
+            --fondo-boton-deshabilitado: #777;
+            --fuente: Arial, sans-serif;
+            --color-resaltado-movimiento: rgba(0, 255, 0, 0.5); /* Verde para movimiento */
+            --color-resaltado-ataque: rgba(255, 0, 0, 0.5); /* Rojo para ataque */
+            --color-seleccion-ataque: rgba(0, 0, 255, 0.7); /* Azul para selección de ataque */
+            --color-barra-vida-fondo: #555;
+            --color-barra-vida: #28a745; /* Verde */
+            --color-barra-vida-enemigo: #dc3545; /* Rojo */
+            --color-dialogo-fondo: rgba(0, 0, 0, 0.8);
+            --color-dialogo-texto: #fff;
+            --color-boton-dialogo: #444;
+            --color-boton-dialogo-hover: #666;
+        }
+
+        body {
+            background: url('https://i.pinimg.com/736x/6a/98/d8/6a98d8dd615811ac453837c650b4dfca.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: var(--fuente);
+            color: var(--color-primario);
+            margin: 0;
+            padding: 0;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Grilla de Combate */
+        .combat-grid {
+            position: absolute;
+            bottom: 25%;
+            left: 20%;
+            width: 60%;
+            height: 30%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            border: 2px solid var(--color-secundario);
+            box-sizing: border-box;
+            gap: 2px;
+            display: none; /* Oculto inicialmente */
+            z-index: 1;
+        }
+
+        .combat-cell {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Resaltado para Movimiento */
+        .combat-cell.movable {
+            background-color: var(--color-resaltado-movimiento);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        /* Resaltado para Ataque */
+        .combat-cell.attackable {
+            background-color: var(--color-resaltado-ataque);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        /* Resaltado para Selección de Ataque */
+        .combat-cell.selected-attack {
+            background-color: var(--color-seleccion-ataque);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Panel de Información */
+        .info-panel, .hero-info, .action-log, .dice-rolls {
+            background: var(--fondo-superior);
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--color-primario);
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 5%;
+            left: 8%;
+            width: 15%;
+            display: none; /* Oculto inicialmente */
+            z-index: 2;
+        }
+
+        .hero-info {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 18%;
+            padding: 15px;
+            z-index: 10;
+            display: none; /* Oculto inicialmente */
+        }
+
+        .action-log {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            overflow-y: auto;
+            border-top: 2px solid var(--color-secundario);
+            box-sizing: border-box;
+            display: none; /* Oculto inicialmente */
+            z-index: 3;
+        }
+
+        .action-log p {
+            margin: 5px 0;
+        }
+
+        /* Datos */
+        .dice-rolls {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 20;
+            display: none; /* Oculto inicialmente */
+        }
+
+        .dice-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dice {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #333;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            animation: spin 1s ease-out;
+        }
+
+        /* Animación de Giro de Dados */
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .dice.success {
+            background-color: #28a745; /* Verde */
+            color: #fff;
+            transform: scale(1.2);
+        }
+
+        .dice.repeat {
+            background-color: #ffc107; /* Amarillo */
+            color: #000;
+        }
+
+        .dice.repeat-six {
+            background-color: #dc3545; /* Rojo */
+            color: #fff;
+        }
+
+        .dice.failure {
+            background-color: #6c757d; /* Gris */
+            color: #fff;
+            transform: scale(0.8);
+        }
+
+        .dice.failure::after {
+            content: 'X';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: red;
+        }
+
+        .action-description {
+            font-size: 1.2em;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        #successCount {
+            font-size: 1.2em;
+            color: #fff;
+        }
+
+        /* Botones de Acción */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            padding: 10px;
+            background-color: var(--fondo-boton);
+            color: var(--color-primario);
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-buttons button:hover {
+            background-color: var(--fondo-boton-hover);
+        }
+
+        .action-buttons button:disabled {
+            background-color: var(--fondo-boton-deshabilitado);
+            cursor: not-allowed;
+        }
+
+        /* Barras de Vida */
+        .health-bar {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 8px;
+            background-color: var(--color-barra-vida-fondo);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            width: 100%;
+            background-color: var(--color-barra-vida);
+            transition: width 0.3s ease;
+        }
+
+        .health-fill.enemigo {
+            background-color: var(--color-barra-vida-enemigo);
+        }
+
+        /* Animaciones y Efectos */
+        .hero, .enemy {
+            height: 400%;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: filter 0.5s ease, transform 0.3s ease;
+        }
+
+        .hero.damaged, .enemy.damaged {
+            filter: brightness(0.5);
+            transform: scale(0.9);
+        }
+
+        .attack-animation, .attack-fail-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            font-size: 2em;
+            pointer-events: none;
+            animation-duration: 1s;
+            animation-timing-function: ease-in-out;
+            z-index: 5;
+        }
+
+        .attack-animation {
+            color: red;
+            animation-name: attackFadeOut;
+        }
+
+        .attack-fail-animation {
+            color: blue;
+            animation-name: failFadeOut;
+        }
+
+        .damage-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) scale(1);
+            font-size: 2.5em;
+            color: yellow;
+            animation: fadeOut 1.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        @keyframes attackFadeOut {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+        }
+
+        @keyframes failFadeOut {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+        }
+
+        .highlighted {
+            /* Estilos adicionales si es necesario */
+        }
+
+        /* Estilos para la Barra de Diálogo */
+        .dialogue-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-dialogo-fondo);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none; /* Oculto por defecto */
+        }
+
+        .dialogue-box {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            color: var(--color-dialogo-texto);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dialogue-box img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dialogue-text {
+            flex: 1;
+            font-size: 1.2em;
+        }
+
+        .dialogue-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .dialogue-buttons button {
+            padding: 10px 20px;
+            background-color: var(--color-boton-dialogo);
+            color: var(--color-dialogo-texto);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dialogue-buttons button:hover {
+            background-color: var(--color-boton-dialogo-hover);
+        }
+
+        /* Mensaje de Fin de Combate */
+        .combat-end-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-dialogo-fondo);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none; /* Oculto por defecto */
+        }
+
+        .combat-end-box {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            max-width: 500px;
+            color: var(--color-dialogo-texto);
+            text-align: center;
+        }
+
+        .combat-end-box button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-boton-dialogo);
+            color: var(--color-dialogo-texto);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .combat-end-box button:hover {
+            background-color: var(--color-boton-dialogo-hover);
+        }

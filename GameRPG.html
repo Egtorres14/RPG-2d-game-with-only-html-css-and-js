@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combate Táctico JRPG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Panel de Información de Participantes -->
+    <div class="info-panel" id="infoPanel">
+        <h3>Participantes del Combate</h3>
+        <div id="turnOrder">
+            <p><strong>Héroe:</strong> <span id="heroPVInfo">16</span> PV</p>
+            <p><strong>Enemigo 1:</strong> <span id="enemy1PVInfo">10</span> PV</p>
+            <p><strong>Enemigo 2:</strong> <span id="enemy2PVInfo">10</span> PV</p>
+        </div>
+    </div>
+
+    <!-- Registro de Acciones -->
+    <div class="action-log" id="actionLog">
+        <h3>Registro de Acciones</h3>
+    </div>
+
+    <!-- Información del Héroe -->
+    <div class="hero-info" id="heroInfo">
+        <h3>Estadísticas del Héroe</h3>
+        <p><strong>Fuerza:</strong> 5</p>
+        <p><strong>Agilidad:</strong> 5</p>
+        <p><strong>Poder:</strong> 5</p>
+        <p><strong>Puntos de Vida:</strong> <span id="heroPVStats">16</span></p>
+        <p><strong>Armadura:</strong> 5</p>
+        <p><strong>Acciones Acumuladas:</strong> <span id="heroActions">0</span></p>
+        <div id="actionRollResults"></div>
+        <div class="action-buttons">
+            <button id="moveButton">Movimiento</button>
+            <button id="swordButton">Espada</button>
+            <button id="techButton">Técnica X</button>
+            <button id="endTurnButton">Terminar Turno</button>
+        </div>
+    </div>
+
+    <!-- Grilla de Combate -->
+    <div class="combat-grid" id="combatGrid"></div>
+
+    <!-- Lanzamientos de Dados -->
+    <div class="dice-rolls" id="diceRolls">
+        <div class="dice-container" id="diceContainer"></div>
+        <div class="action-description" id="actionDescription">Selecciona una acción</div>
+        <div id="successCount"></div>
+    </div>
+
+    <!-- Barra de Diálogo -->
+    <div class="dialogue-overlay" id="dialogueOverlay">
+        <div class="dialogue-box">
+            <img src="" alt="Personaje" id="dialogueImage">
+            <div class="dialogue-text" id="dialogueText"></div>
+        </div>
+        <div class="dialogue-buttons" id="dialogueButtons">
+            <button id="dialogueNextButton">Siguiente</button>
+            <button id="dialogueFightButton" style="display: none;">Pelear</button>
+        </div>
+    </div>
+
+    <!-- Mensaje de Fin de Combate -->
+    <div class="combat-end-overlay" id="combatEndOverlay">
+        <div class="combat-end-box">
+            <h2>¡Combate Finalizado!</h2>
+            <p>Has derrotado a todos los enemigos.</p>
+            <button id="restartButton">Reiniciar Combate</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
